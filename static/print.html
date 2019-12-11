@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>申报凭证</title>
+    <style>
+        @media print {
+            @page {
+                size: 3.15in auto portrait;
+                margin: 0;
+            }
+            table.table-head tr {
+                padding: 0 0 0 10px !important;
+            }
+        }
+        body, div, hr, table, tr, td, th, span {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #000;
+        }
+        body, html {
+            background: #ffffff;
+            font-size: 12px;
+        }
+        #printElement {
+            padding: 0 2px;
+        }
+        #printElement, #printContent, .print-head {
+            width:100%;
+            height:100%;
+        }
+        hr {
+            height: 4px;
+            background: #000;
+        }
+        table {
+            width:100%;
+            border-collapse:collapse;
+            border:none;
+        }
+        tr {
+            width: 100%;
+        }
+        td {
+            text-align: left;
+            vertical-align: middle;
+            border:none;
+            height: 20px;
+            line-height: 20px;
+        }
+        .supvLoctNm {
+            height:25px;
+            line-height:18px;
+            font-weight: bold;
+        }
+        .money {
+            font-weight:800;
+            text-align: right;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<script>
+    window.onload = function() {
+        const {ipcRenderer} = require('electron')
+        // 接收主线程发送过来的创建DOM事件
+        ipcRenderer.on('createHtml', (event, thContent) => {
+            let html = `
+            <div id="printElement">
+                <div id="printContent">
+                    <div class="print-head">
+                        <div style="height: 65px;width:80px;text-align:center;">
+                            <img src="./logo_HT.png" style="height: 24px;width:100%;"><br>
+                            <span>航通智能</span>
+                        </div>
+                        <div style="text-align: center;">申报单凭据</div>
+                        <hr />
+                        <div>
+                            <table class="table-head">
+                                <tr style="padding: 0 0 0 12px; display: block;">
+                                    <td colspan="4"">申报单编号:${thContent.igdsdclNo}</td>
+                                </tr>
+                                <tr style="padding: 0 0 0 12px; display: block;">
+                                    <td colspan="4"">进出口类型:${thContent.impexpMarkcd == 'I' ? '进口' : '出口'}</td>
+                                </tr>
+                                <tr style="padding: 0 0 0 12px; display: block;">
+                                    <td colspan="4"">拼车标识:${thContent.trcplFlag == '1' ? '不拼车' : '拼车'}</td>
+                                </tr>
+                                <tr style="padding: 0 0 0 12px; display: block;">
+                                    <td colspan="4"">车牌号:${thContent.pltno}</td>
+                                </tr>
+                                <tr style="padding: 0 0 0 12px; display: block;">
+                                    <td colspan="4"">申报人:${thContent.dclerName}</td>
+                                </tr>
+                                <tr style="padding: 0 0 0 12px; display: block;">
+                                    <td colspan="4"">申报时间:${thContent.decDate}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="supvLoctNm">场所名称：${thContent.supvLoctNm}</div>
+                        <hr />
+                        <table class="goods">
+                        </table>
+                        <div class="money">小计${thContent.gdTatlprice} 元</div>
+                        <br>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            `
+            document.body.innerHTML = html
+            let goodsDiv = document.querySelector('.goods')
+            let goodsHtml = `
+                <tr>
+                    <th style="border:none;vertical-align: middle;text-align: center;">商品名称</th>
+                    <th>申报数量</th>
+                    <th>总毛重</th>
+                    <th>金额(￥)</th>
+                </tr>
+                `
+            for (let i = 0; i < thContent.tDeclarationListList.length; i++) {
+                let subItem = thContent.tDeclarationListList[i]
+                goodsHtml += 
+                    `<tr>
+                        <td style="border:none;vertical-align: middle;text-align: center;">${subItem.gdsNm}</td>
+                        <td style="border:none;vertical-align: middle;text-align: center;">${subItem.dclQty}</td>
+                        <td style="border:none;vertical-align: middle;text-align: center;">${subItem.grossWt.toFixed(2)}</td>
+                    `
+                if (subItem.dclTypecd == '0') goodsHtml += `<td style="border:none;vertical-align: middle;text-align: center;">${(subItem.dclUprcAmt * subItem.dclQty).toFixed(2)}</td>`
+                else goodsHtml += `<td style="border:none;vertical-align: middle;text-align: center;">${(subItem.dclUprcAmt * subItem.grossWt).toFixed(2)}</td>`
+                goodsHtml += `</tr>`
+            }
+            goodsDiv.innerHTML = goodsHtml
+            
+            // 渲染完毕，发送事件通知给主线程 执行打印操作
+            ipcRenderer.sendToHost('print-html')
+        })
+    }
+</script>
+
+</body>
+</html>
