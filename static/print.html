@@ -27,6 +27,7 @@
         }
         #printElement {
             padding: 0 2px;
+            color: #000;
         }
         #printElement, #printContent, .print-head {
             width:100%;
@@ -40,6 +41,7 @@
             width:100%;
             border-collapse:collapse;
             border:none;
+            table-layout: fixed;
         }
         tr {
             width: 100%;
@@ -55,11 +57,15 @@
             height:25px;
             line-height:18px;
             font-weight: bold;
+            padding-left: 10px;
+        }
+        .goods {
+            padding-right: 20px;
         }
         .money {
             font-weight:800;
             text-align: right;
-            padding: 10px 0;
+            padding: 10px 20px 10px 10px;
         }
     </style>
 </head>
@@ -117,7 +123,7 @@
             let goodsDiv = document.querySelector('.goods')
             let goodsHtml = `
                 <tr>
-                    <th style="border:none;vertical-align: middle;text-align: center;">商品名称</th>
+                    <th style="border:none;vertical-align: middle;text-align: left; padding-left: 15px;">商品名称</th>
                     <th>申报数量</th>
                     <th>总毛重</th>
                     <th>金额(￥)</th>
@@ -127,7 +133,7 @@
                 let subItem = thContent.tDeclarationListList[i]
                 goodsHtml += 
                     `<tr>
-                        <td style="border:none;vertical-align: middle;text-align: center;">${subItem.gdsNm}</td>
+                        <td style="border:none;vertical-align: middle;text-align: left; padding-left: 15px;">${subItem.gdsNm}</td>
                         <td style="border:none;vertical-align: middle;text-align: center;">${subItem.dclQty}</td>
                         <td style="border:none;vertical-align: middle;text-align: center;">${subItem.grossWt.toFixed(2)}</td>
                     `

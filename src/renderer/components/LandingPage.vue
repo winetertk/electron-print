@@ -3,6 +3,7 @@
     <!-- <img id="logo" src="~@/assets/logo.png" alt="silent-print"> -->
     <main>
       <el-container>
+        <!-- <webview src="../../../static/print.html" ref="printWebview" nodeintegration width="800" height="800"></webview> -->
         <el-header>
           <h1>{{$store.state.Printer.state}}</h1>
         </el-header>
@@ -49,12 +50,82 @@ export default {
       _this.$router.push({ name: 'print', params: {printParams: data} })
     })
   },
-  mounted() {
-    const fs = require("fs");
-    let statObj = fs.statSync("D:/test/a.txt");
-    // let files = fs.readdirSync("D:/test")
-    console.log(statObj); // 6
-  },
+  // mounted() {
+  //   const webview = this.$refs.printWebview;
+  //   webview.addEventListener('dom-ready', () => {
+  //     let thContent = {
+  //       allDclQty: 1,
+  //       allGrossWt: 1,
+  //       btrnbBizModecd: "2",
+  //       createDate: "2019-12-23 13:41:21",
+  //       dclCuscd: "8609",
+  //       dclerName: "陶昆",
+  //       decDate: "2019-12-23 13:42:02",
+  //       decStatus: "3",
+  //       tDeclarationListList: [{
+  //           btrnbShopsNm: null,
+  //           dclQty: 3,
+  //           dclTypecd: "0",
+  //           dclUnitcd: "001",
+  //           dclUprcAmt: 10,
+  //           fstQty: 1,
+  //           gdeCd: "1",
+  //           gdsNm: "重量在50千克及以上的其他野猪",
+  //           gdsSpcfModelDesc: "10",
+  //           grossWt: 1,
+  //           hsGdecd: "0103920010",
+  //           id: "201912231147556604391",
+  //           originNatcd: null,
+  //           secdQty: 1,
+  //           seqNo: "201912231147556511087",
+  //           unit1: null,
+  //           unit1QtyRatio: null,
+  //           unit2: null,
+  //           unit2QtyRatio: null,
+  //           wrapTypecd: "1"
+  //         },
+  //         {
+  //           btrnbShopsNm: null,
+  //           dclQty: 3,
+  //           dclTypecd: "0",
+  //           dclUnitcd: "001",
+  //           dclUprcAmt: 10,
+  //           fstQty: 1,
+  //           gdeCd: "1",
+  //           gdsNm: "测试商品",
+  //           gdsSpcfModelDesc: "10",
+  //           grossWt: 1,
+  //           hsGdecd: "0103920010",
+  //           id: "201912231147556604391",
+  //           originNatcd: null,
+  //           secdQty: 1,
+  //           seqNo: "201912231147556511087",
+  //           unit1: null,
+  //           unit1QtyRatio: null,
+  //           unit2: null,
+  //           unit2QtyRatio: null,
+  //           wrapTypecd: "1"
+  //         }
+  //       ],
+  //       gdItems: 1,
+  //       gdTatlprice: 85.99,
+  //       idno: "500233199408280315",
+  //       igdsdclNo: null,
+  //       impexpMarkcd: "I",
+  //       inDate: null,
+  //       logisStatus: "0",
+  //       outDate: null,
+  //       pltno: "渝A10003",
+  //       putrecChgFlag: "0",
+  //       rmk: null,
+  //       seqNo: "201912231341218600406",
+  //       supvLoctNm: null,
+  //       supvLoctNo: "DLHGN8609005",
+  //     }
+  //     // 打印页面加载结束的时候发送动态创建DOM指令
+  //     webview.send('createHtml', thContent)
+  //   })
+  // }
 };
 </script>
 
